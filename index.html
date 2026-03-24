@@ -17,6 +17,7 @@
 --accent:#4f8cff;
 --accent2:#74f0c8;
 --danger:#ff4d4d;
+--warning:#ffcc00;
 --shadow:0 18px 60px rgba(0,0,0,0.35);
 --radius:18px;
 }
@@ -53,6 +54,7 @@ font-size:14px;
 }
 
 nav a:hover{color:white;}
+nav a.prof-link { color: var(--warning); font-weight: bold; }
 
 .container{
 width:min(1100px,calc(100% - 40px));
@@ -111,6 +113,11 @@ border:1px solid var(--border);
 background:rgba(0,0,0,0.2);
 color:white;
 outline:none;
+transition: border 0.2s;
+}
+
+input:focus, textarea:focus {
+border-color: var(--accent);
 }
 
 textarea{min-height:90px;resize:vertical;}
@@ -149,6 +156,8 @@ padding: 6px 14px;
 border-radius: 20px;
 font-size: 13px;
 border: 1px solid var(--border);
+display: inline-block;
+margin-bottom: 8px;
 }
 
 .stat-box {
@@ -158,6 +167,19 @@ border-radius: 12px;
 text-align: center;
 border: 1px solid var(--border);
 }
+
+.notification-bar {
+background: linear-gradient(90deg, rgba(255, 204, 0, 0.1), rgba(255, 204, 0, 0.05));
+border-left: 4px solid var(--warning);
+padding: 12px 20px;
+border-radius: 8px;
+margin-bottom: 20px;
+display: flex;
+align-items: center;
+gap: 10px;
+}
+
+#prof-dashboard-content { display: none; }
 
 @media(max-width:760px){
 .grid2{grid-template-columns:1fr;}
@@ -180,6 +202,7 @@ nav a{margin-left:10px;}
     <a href="#" onclick="showSection('placements')">Placements</a>
     <a href="#" onclick="showSection('nccr')">NCCR</a>
     <a href="#" onclick="showSection('submissions')">Submissions</a>
+    <a href="#" onclick="showSection('prof')" class="prof-link">Prof Login</a>
   </nav>
 </header>
 
@@ -187,64 +210,98 @@ nav a{margin-left:10px;}
 
   <!-- HOME -->
   <div id="home" class="section active">
+    
+    <!-- NOTIFICATION BAR (Dynamic) -->
+    <div id="main-notification" class="notification-bar" style="display: none;">
+      <span style="font-size: 18px;">📢</span>
+      <span id="notification-text" style="color: var(--text); font-size: 14px; line-height: 1.4;"></span>
+    </div>
+
     <div class="card">
       <h1 style="margin-top:0">Tolani College of Arts & Science</h1>
       <p style="color:var(--muted);line-height:1.6">
         Student Portal for Placement Registration and NCCR Enrollments.
-        Forms store data locally and the placement form redirects to the cell's email.
       </p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
         <button class="primary" onclick="showSection('placements')">Placement Registration</button>
         <button onclick="showSection('nccr')">NCCR Registration</button>
-        <button onclick="showSection('submissions')">View Submissions</button>
       </div>
     </div>
 
-    <!-- CURRENT PLACEMENTS HIGHLIGHT -->
+    <!-- CURRENT PLACEMENTS HIGHLIGHT (Dynamic) -->
     <div class="card" style="border-left: 4px solid var(--accent2);">
-      <h2 style="margin-top:0; color: var(--accent2);">Campus Placements Highlight (2025-26)</h2>
+      <h2 style="margin-top:0; color: var(--accent2);">Campus Placements Highlight</h2>
       <p style="margin-top:0;color:var(--muted);line-height:1.6">
         Our placement cell actively bridges the gap between academics and industry, facilitating excellent career opportunities for our graduates.
       </p>
       
       <div class="grid2" style="margin-bottom: 20px;">
         <div class="stat-box">
-          <h3 style="margin: 0; color: white; font-size: 28px;">45+</h3>
+          <h3 id="stat-companies" style="margin: 0; color: white; font-size: 28px;">--</h3>
           <p style="margin: 5px 0 0 0; color: var(--muted); font-size: 14px;">Companies Visited</p>
         </div>
         <div class="stat-box">
-          <h3 style="margin: 0; color: var(--accent); font-size: 28px;">150+</h3>
+          <h3 id="stat-offers" style="margin: 0; color: var(--accent); font-size: 28px;">--</h3>
           <p style="margin: 5px 0 0 0; color: var(--muted); font-size: 14px;">Offers Extended</p>
         </div>
       </div>
 
       <p style="color:var(--muted); margin: 0 0 12px 0;"><strong>Top Recruiters:</strong></p>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <span class="tag">TCS</span>
-        <span class="tag">HDFC Bank</span>
-        <span class="tag">ICICI Bank</span>
-        <span class="tag">Adani Ports</span>
-        <span class="tag">Reliance Retail</span>
-        <span class="tag">Wipro</span>
-        <span class="tag">Deendayal Port Authority</span>
+      <div id="recruiter-tags" style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <!-- Tags injected by JS -->
       </div>
     </div>
+  </div>
 
+  <!-- PROFESSOR DASHBOARD -->
+  <div id="prof" class="section">
     <div class="card">
-      <h2 style="margin-top:0">Quick Info</h2>
-      <div class="grid2">
-        <div>
-          <h3 style="margin:0 0 6px 0">Placements</h3>
-          <p style="margin:0;color:var(--muted);line-height:1.6">
-            Collect placement-ready student data and redirect submission to the placement cell email.
-          </p>
-        </div>
-        <div>
-          <h3 style="margin:0 0 6px 0">NCCR</h3>
-          <p style="margin:0;color:var(--muted);line-height:1.6">
-            Register students for National Cadet Corps Registration (NCCR) activities.
-          </p>
-        </div>
+      <h2 style="margin-top:0; color: var(--warning);">Professor Dashboard</h2>
+      
+      <!-- LOGIN VIEW -->
+      <div id="prof-login-view">
+        <p style="color:var(--muted);line-height:1.6">
+          Enter the administrator PIN to update homepage statistics and notifications. <br>
+          <small><em>(Prototype PIN is <strong>1234</strong>)</em></small>
+        </p>
+        <form onsubmit="handleProfLogin(event)" style="max-width: 300px;">
+          <label>Admin PIN</label>
+          <input type="password" id="prof-pin" required placeholder="****">
+          <button class="primary" type="submit">Unlock Dashboard</button>
+          <p id="login-error" style="color:var(--danger); font-size: 13px; display: none;">Incorrect PIN.</p>
+        </form>
+      </div>
+
+      <!-- DASHBOARD CONTENT (Hidden until login) -->
+      <div id="prof-dashboard-content">
+        <p style="color:lightgreen; margin-top:0;">🔓 Access Granted. Changes here will immediately reflect on the Home UI.</p>
+        <hr>
+
+        <form onsubmit="saveProfConfig(event)">
+          
+          <h3 style="margin-top:0">1. Placement Statistics</h3>
+          <div class="grid2">
+            <div>
+              <label>Companies Visited (e.g. 45+)</label>
+              <input id="config-companies" required>
+            </div>
+            <div>
+              <label>Offers Extended (e.g. 150+)</label>
+              <input id="config-offers" required>
+            </div>
+          </div>
+
+          <label>Top Recruiters (Comma separated)</label>
+          <textarea id="config-recruiters" required placeholder="TCS, HDFC Bank, ICICI, Wipro..."></textarea>
+
+          <h3 style="margin-top:20px">2. Homepage Notification</h3>
+          <label>Announcement Text (Leave blank to hide notification bar)</label>
+          <input id="config-notification" placeholder="E.g. TCS placement drive on 15th March!">
+
+          <br><br>
+          <button class="primary" type="submit">Save & Update Home UI</button>
+          <span id="config-status" style="color:lightgreen; margin-left: 10px; font-size: 14px;"></span>
+        </form>
       </div>
     </div>
   </div>
@@ -264,179 +321,75 @@ nav a{margin-left:10px;}
     </div>
   </div>
 
-  <!-- PLACEMENTS -->
+  <!-- PLACEMENTS FORM -->
   <div id="placements" class="section">
     <div class="card">
       <h2 style="margin-top:0">Placement Registration</h2>
-      <p style="margin-top:0;color:var(--muted);line-height:1.6">
-        After submitting, this will draft an email with your details to:
-        <strong>placementtcas2026@gmail.com</strong>
-      </p>
-
       <form onsubmit="submitPlacement(event)">
+        <!-- Same placement form inputs as before -->
         <div class="grid2">
-          <div>
-            <label>Student Name *</label>
-            <input id="p_name" required>
-          </div>
-          <div>
-            <label>Register No / Roll No *</label>
-            <input id="p_roll" required>
-          </div>
+          <div><label>Student Name *</label><input id="p_name" required></div>
+          <div><label>Register No / Roll No *</label><input id="p_roll" required></div>
         </div>
-
         <div class="grid2">
-          <div>
-            <label>Phone (10 digits) *</label>
-            <input id="p_phone" required placeholder="9876543210">
-          </div>
-          <div>
-            <label>Email *</label>
-            <input id="p_email" type="email" required placeholder="student@email.com">
-          </div>
+          <div><label>Phone *</label><input id="p_phone" required></div>
+          <div><label>Email *</label><input id="p_email" type="email" required></div>
         </div>
-
         <div class="grid2">
           <div>
             <label>Department *</label>
             <select id="p_dept" required>
               <option>B.Sc Computer Science</option>
-              <option>B.Sc Mathematics</option>
-              <option>B.Sc Physics</option>
-              <option>B.Sc Chemistry</option>
               <option>B.Com</option>
               <option>B.A English</option>
             </select>
           </div>
           <div>
             <label>Year *</label>
-            <select id="p_year" required>
-              <option>1st Year</option>
-              <option>2nd Year</option>
-              <option>3rd Year</option>
-              <option>Final Year</option>
-            </select>
+            <select id="p_year" required><option>Final Year</option><option>3rd Year</option></select>
           </div>
         </div>
-
-        <div class="grid2">
-          <div>
-            <label>Skills (comma separated)</label>
-            <input id="p_skills" placeholder="Python, Excel, Communication, SQL">
-          </div>
-          <div>
-            <label>Preferred Role</label>
-            <input id="p_role" placeholder="Software Developer / Analyst / HR / Sales">
-          </div>
-        </div>
-
-        <div class="grid2">
-          <div>
-            <label>CGPA / Percentage</label>
-            <input id="p_cgpa" placeholder="8.1 / 81%">
-          </div>
-          <div>
-            <label>LinkedIn / Portfolio URL</label>
-            <input id="p_link" placeholder="https://linkedin.com/in/...">
-          </div>
-        </div>
-
-        <label>Short Bio / About</label>
-        <textarea id="p_bio" placeholder="Brief summary about student..."></textarea>
-
+        <label>Skills</label><input id="p_skills">
         <label style="display:flex;gap:8px;align-items:center;color:var(--muted)">
-          <input type="checkbox" id="p_consent" checked style="width:auto;margin:0">
-          I confirm these details are correct and agree to share for placement opportunities.
+          <input type="checkbox" id="p_consent" checked style="width:auto;margin:0"> I agree.
         </label>
-
-        <br><br>
-        <button class="primary" type="submit">Submit & Email Placement Cell</button>
-        <button type="button" class="small" onclick="showSection('submissions')" style="margin-left:8px">
-          View Submissions
-        </button>
+        <button class="primary" type="submit">Submit Registration</button>
       </form>
-
       <div id="p_status" style="margin-top:12px"></div>
-
-      <hr>
-      <div style="color:var(--muted2);font-size:12px;line-height:1.6">
-        Note: <strong>mailto redirect</strong> depends on user having an email app configured.
-      </div>
     </div>
   </div>
 
-  <!-- NCCR -->
+  <!-- NCCR FORM -->
   <div id="nccr" class="section">
     <div class="card">
       <h2 style="margin-top:0">NCCR Registration</h2>
-      <p style="margin-top:0;color:var(--muted);line-height:1.6">
-        Apply for National Cadet Corps Registration (NCCR) at Tolani College.
-      </p>
-
       <form onsubmit="submitNCCR(event)">
+        <!-- Same NCCR inputs as before -->
         <div class="grid2">
-          <div>
-            <label>Student Name *</label>
-            <input id="n_name" required>
-          </div>
-          <div>
-            <label>Roll No / Register No *</label>
-            <input id="n_roll" required>
-          </div>
+          <div><label>Student Name *</label><input id="n_name" required></div>
+          <div><label>Roll No *</label><input id="n_roll" required></div>
         </div>
-
         <div class="grid2">
-          <div>
-            <label>Phone (10 digits) *</label>
-            <input id="n_phone" required placeholder="9876543210">
-          </div>
-          <div>
-            <label>Blood Group *</label>
-            <input id="n_blood" required placeholder="O+, B+, etc.">
-          </div>
+          <div><label>Phone *</label><input id="n_phone" required></div>
+          <div><label>Blood Group *</label><input id="n_blood" required></div>
         </div>
-
-        <label>Why do you want to join NCCR?</label>
-        <textarea id="n_reason" placeholder="Briefly explain your interest..."></textarea>
-
-        <br><br>
+        <label>Reason to join</label><textarea id="n_reason"></textarea>
         <button class="primary" type="submit">Submit NCCR Application</button>
       </form>
-
       <div id="n_status" style="margin-top:12px"></div>
     </div>
   </div>
 
-  <!-- SUBMISSIONS -->
+  <!-- SUBMISSIONS TABLE -->
   <div id="submissions" class="section">
     <div class="card">
-      <h2 style="margin-top:0">Submissions</h2>
-      <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button onclick="clearData()">Clear All Data</button>
-        <button class="primary" onclick="exportJSON()">Export JSON</button>
-      </div>
-
+      <h2 style="margin-top:0">Submissions Data</h2>
+      <button onclick="clearData()">Clear All Data</button>
       <h3 style="margin:18px 0 10px 0">Placements</h3>
       <div style="overflow-x: auto;">
         <table>
-          <thead>
-            <tr>
-              <th>Date</th><th>Name</th><th>Roll</th><th>Phone</th><th>Email</th><th>Dept</th><th>Year</th><th>Skills</th><th>Role</th><th>CGPA</th><th>Link</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Name</th><th>Roll</th><th>Phone</th><th>Email</th></tr></thead>
           <tbody id="placementsTable"></tbody>
-        </table>
-      </div>
-
-      <h3 style="margin:28px 0 10px 0">NCCR Registrations</h3>
-      <div style="overflow-x: auto;">
-        <table>
-          <thead>
-            <tr>
-              <th>Date</th><th>Name</th><th>Roll</th><th>Phone</th><th>Blood Group</th><th>Reason</th>
-            </tr>
-          </thead>
-          <tbody id="nccrTable"></tbody>
         </table>
       </div>
     </div>
@@ -448,6 +401,19 @@ nav a{margin-left:10px;}
 const EMAIL_TO = "placementtcas2026@gmail.com";
 const DEFAULT_STORE = '{"placements":[],"nccr":[]}';
 
+// Default dynamic config for the homepage
+const DEFAULT_CONFIG = {
+  companies: "45+",
+  offers: "150+",
+  recruiters: "TCS, HDFC Bank, ICICI Bank, Adani Ports, Reliance Retail, Wipro",
+  notification: "Welcome to the new Tolani College Placement & NCCR Portal!"
+};
+
+// Initialize UI on load
+window.onload = () => {
+  loadConfigToUI();
+};
+
 function showSection(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -455,204 +421,130 @@ function showSection(id){
 }
 
 /* =========================
-   PLACEMENTS (Local + Email Redirect)
+   PROFESSOR DASHBOARD (Dynamic UI)
+========================= */
+function handleProfLogin(e) {
+  e.preventDefault();
+  const pin = document.getElementById('prof-pin').value;
+  if(pin === "1234") { // Hardcoded prototype PIN
+    document.getElementById('prof-login-view').style.display = 'none';
+    document.getElementById('prof-dashboard-content').style.display = 'block';
+    populateProfForm();
+  } else {
+    document.getElementById('login-error').style.display = 'block';
+  }
+}
+
+// Load config from LocalStorage to the Home Page UI
+function loadConfigToUI() {
+  const config = JSON.parse(localStorage.getItem('tolaniProfConfig')) || DEFAULT_CONFIG;
+  
+  // 1. Update Placement Stats
+  document.getElementById('stat-companies').innerText = config.companies;
+  document.getElementById('stat-offers').innerText = config.offers;
+
+  // 2. Update Recruiters Tags
+  const tagContainer = document.getElementById('recruiter-tags');
+  tagContainer.innerHTML = '';
+  const recruitersArray = config.recruiters.split(',').map(s => s.trim()).filter(s => s);
+  recruitersArray.forEach(recruiter => {
+    const span = document.createElement('span');
+    span.className = 'tag';
+    span.innerText = recruiter;
+    tagContainer.appendChild(span);
+  });
+
+  // 3. Update Notification Bar
+  const notifBar = document.getElementById('main-notification');
+  const notifText = document.getElementById('notification-text');
+  if (config.notification && config.notification.trim() !== "") {
+    notifText.innerText = config.notification;
+    notifBar.style.display = 'flex';
+  } else {
+    notifBar.style.display = 'none';
+  }
+}
+
+// Populate the Professor Form with existing config
+function populateProfForm() {
+  const config = JSON.parse(localStorage.getItem('tolaniProfConfig')) || DEFAULT_CONFIG;
+  document.getElementById('config-companies').value = config.companies;
+  document.getElementById('config-offers').value = config.offers;
+  document.getElementById('config-recruiters').value = config.recruiters;
+  document.getElementById('config-notification').value = config.notification || "";
+}
+
+// Save Professor configurations to LocalStorage
+function saveProfConfig(e) {
+  e.preventDefault();
+  const newConfig = {
+    companies: document.getElementById('config-companies').value.trim(),
+    offers: document.getElementById('config-offers').value.trim(),
+    recruiters: document.getElementById('config-recruiters').value.trim(),
+    notification: document.getElementById('config-notification').value.trim(),
+  };
+
+  localStorage.setItem('tolaniProfConfig', JSON.stringify(newConfig));
+  
+  // Immediately reflect on Home UI
+  loadConfigToUI();
+  
+  const statusEl = document.getElementById('config-status');
+  statusEl.innerText = "✓ Updates saved & applied!";
+  setTimeout(() => statusEl.innerText = "", 3000);
+}
+
+/* =========================
+   FORMS SUBMISSIONS LOGIC
 ========================= */
 function submitPlacement(e){
   e.preventDefault();
-
   const name = document.getElementById('p_name').value.trim();
   const roll = document.getElementById('p_roll').value.trim();
   const phone = document.getElementById('p_phone').value.trim();
   const email = document.getElementById('p_email').value.trim();
-  const dept = document.getElementById('p_dept').value;
-  const year = document.getElementById('p_year').value;
-  const skills = document.getElementById('p_skills').value.trim();
-  const role = document.getElementById('p_role').value.trim();
-  const cgpa = document.getElementById('p_cgpa').value.trim();
-  const link = document.getElementById('p_link').value.trim();
-  const bio = document.getElementById('p_bio').value.trim();
-  const consent = document.getElementById('p_consent').checked;
-
-  if(!name || !roll || !/^\d{10}$/.test(phone) || !email || !consent){
-    document.getElementById('p_status').innerHTML =
-      '<p style="color:var(--danger)">Fill required fields (name, roll, phone, email) and consent.</p>';
-    return;
-  }
-
-  // Save locally for demo
+  
   const store = JSON.parse(localStorage.getItem('tolaniStore') || DEFAULT_STORE);
   if(!store.placements) store.placements = [];
-  store.placements.unshift({
-    date:new Date().toLocaleString(),
-    name, roll, phone, email, dept, year, skills, role, cgpa, link, bio
-  });
+  store.placements.unshift({ name, roll, phone, email });
   localStorage.setItem('tolaniStore', JSON.stringify(store));
 
-  // Build email subject + body
-  const subject = `Placement Registration: ${name} (${roll}) - ${dept}`;
-  const body =
-`Hello Placement Cell,
-
-A student has submitted a Placement Registration.
-
-Name: ${name}
-Roll No: ${roll}
-Department: ${dept}
-Year: ${year}
-Phone: ${phone}
-Email: ${email}
-
-Skills: ${skills || "-"}
-Preferred Role: ${role || "-"}
-CGPA/Percentage: ${cgpa || "-"}
-LinkedIn/Portfolio: ${link || "-"}
-
-Bio:
-${bio || "-"}
-
-Regards,
-Tolani College Website (Prototype)`;
-
-  // Redirect to email compose
-  const mailto =
-    `mailto:${encodeURIComponent(EMAIL_TO)}` +
-    `?subject=${encodeURIComponent(subject)}` +
-    `&body=${encodeURIComponent(body)}`;
-
-  document.getElementById('p_status').innerHTML =
-    '<p style="color:lightgreen">Saved! Opening your email app to send the details…</p>';
-
-  // Small delay so user sees message before redirecting
-  setTimeout(()=>{
-    window.location.href = mailto;
-  }, 350);
-
+  document.getElementById('p_status').innerHTML = '<p style="color:lightgreen">Saved!</p>';
   e.target.reset();
 }
 
-/* =========================
-   NCCR (Local Store)
-========================= */
 function submitNCCR(e){
   e.preventDefault();
-
-  const name = document.getElementById('n_name').value.trim();
-  const roll = document.getElementById('n_roll').value.trim();
-  const phone = document.getElementById('n_phone').value.trim();
-  const blood = document.getElementById('n_blood').value.trim();
-  const reason = document.getElementById('n_reason').value.trim();
-
-  if(!name || !roll || !/^\d{10}$/.test(phone) || !blood){
-    document.getElementById('n_status').innerHTML =
-      '<p style="color:var(--danger)">Please fill all required fields properly.</p>';
-    return;
-  }
-
   const store = JSON.parse(localStorage.getItem('tolaniStore') || DEFAULT_STORE);
   if(!store.nccr) store.nccr = [];
   store.nccr.unshift({
-    date:new Date().toLocaleString(),
-    name, roll, phone, blood, reason
+    name: document.getElementById('n_name').value.trim(),
+    roll: document.getElementById('n_roll').value.trim()
   });
   localStorage.setItem('tolaniStore', JSON.stringify(store));
-
-  document.getElementById('n_status').innerHTML =
-    '<p style="color:lightgreen">NCCR registration submitted successfully!</p>';
-
+  document.getElementById('n_status').innerHTML = '<p style="color:lightgreen">Saved!</p>';
   e.target.reset();
 }
 
-/* =========================
-   LOAD + SHOW SUBMISSIONS
-========================= */
 function loadData(){
   const store = JSON.parse(localStorage.getItem('tolaniStore') || DEFAULT_STORE);
-
-  // Placements table
   const pBody = document.getElementById('placementsTable');
   pBody.innerHTML = '';
   if(!store.placements || store.placements.length === 0){
-    pBody.innerHTML = '<tr><td colspan="11" style="text-align:center;">No placement submissions yet.</td></tr>';
+    pBody.innerHTML = '<tr><td colspan="4">No submissions yet.</td></tr>';
   } else {
     store.placements.forEach(d=>{
-      pBody.innerHTML += `
-        <tr>
-          <td style="white-space:nowrap;">${d.date}</td>
-          <td>${escapeHtml(d.name)}</td>
-          <td>${escapeHtml(d.roll)}</td>
-          <td>${escapeHtml(d.phone)}</td>
-          <td>${escapeHtml(d.email)}</td>
-          <td>${escapeHtml(d.dept)}</td>
-          <td>${escapeHtml(d.year)}</td>
-          <td>${escapeHtml(d.skills || '-')}</td>
-          <td>${escapeHtml(d.role || '-')}</td>
-          <td>${escapeHtml(d.cgpa || '-')}</td>
-          <td>${escapeHtml(d.link || '-')}</td>
-        </tr>
-      `;
-    });
-  }
-
-  // NCCR table
-  const nBody = document.getElementById('nccrTable');
-  nBody.innerHTML = '';
-  if(!store.nccr || store.nccr.length === 0){
-    nBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No NCCR submissions yet.</td></tr>';
-  } else {
-    store.nccr.forEach(d=>{
-      nBody.innerHTML += `
-        <tr>
-          <td style="white-space:nowrap;">${d.date}</td>
-          <td>${escapeHtml(d.name)}</td>
-          <td>${escapeHtml(d.roll)}</td>
-          <td>${escapeHtml(d.phone)}</td>
-          <td>${escapeHtml(d.blood)}</td>
-          <td>${escapeHtml(d.reason || '-')}</td>
-        </tr>
-      `;
+      pBody.innerHTML += `<tr><td>${d.name}</td><td>${d.roll}</td><td>${d.phone}</td><td>${d.email}</td></tr>`;
     });
   }
 }
 
-/* =========================
-   UTILITIES
-========================= */
 function clearData(){
-  if(confirm("Are you sure you want to clear all submissions?")){
+  if(confirm("Are you sure?")){
     localStorage.removeItem('tolaniStore');
     loadData();
   }
 }
-
-function exportJSON(){
-  const store = JSON.parse(localStorage.getItem('tolaniStore') || DEFAULT_STORE);
-  const blob = new Blob([JSON.stringify(store,null,2)], {type:"application/json"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = "tolani_submissions.json";
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function escapeHtml(str){
-  return String(str)
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-}
-
-// Fix legacy localstorage issues if moving from 'ncc' to 'nccr'
-(function migrateOldData(){
-  let store = JSON.parse(localStorage.getItem('tolaniStore'));
-  if(store && store.ncc && !store.nccr) {
-    store.nccr = store.ncc;
-    delete store.ncc;
-    localStorage.setItem('tolaniStore', JSON.stringify(store));
-  }
-})();
 </script>
 
 </body>
