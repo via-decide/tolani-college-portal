@@ -76,11 +76,23 @@ border:1px solid var(--border);
 background:var(--panel2);
 color:white;
 cursor:pointer;
+transition: all 0.2s ease;
+}
+
+button:hover {
+background: rgba(255,255,255,0.15);
 }
 
 button.primary{
 background:linear-gradient(135deg,var(--accent),var(--accent2));
 border:none;
+color: #0b1020;
+font-weight: 600;
+}
+
+button.primary:hover{
+opacity: 0.9;
+transform: translateY(-1px);
 }
 
 button.small{
@@ -119,6 +131,7 @@ padding:10px;
 border-bottom:1px solid var(--border);
 font-size:13px;
 vertical-align:top;
+text-align: left;
 }
 
 .section{display:none;}
@@ -128,6 +141,22 @@ vertical-align:top;
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:14px;
+}
+
+.tag {
+background: rgba(255,255,255,0.1);
+padding: 6px 14px;
+border-radius: 20px;
+font-size: 13px;
+border: 1px solid var(--border);
+}
+
+.stat-box {
+background: var(--panel2);
+padding: 15px;
+border-radius: 12px;
+text-align: center;
+border: 1px solid var(--border);
 }
 
 @media(max-width:760px){
@@ -148,8 +177,8 @@ nav a{margin-left:10px;}
   <nav>
     <a href="#" onclick="showSection('home')">Home</a>
     <a href="#" onclick="showSection('departments')">Departments</a>
-    <a href="#" onclick="showSection('admissions')">Admissions</a>
     <a href="#" onclick="showSection('placements')">Placements</a>
+    <a href="#" onclick="showSection('nccr')">NCCR</a>
     <a href="#" onclick="showSection('submissions')">Submissions</a>
   </nav>
 </header>
@@ -161,13 +190,43 @@ nav a{margin-left:10px;}
     <div class="card">
       <h1 style="margin-top:0">Tolani College of Arts & Science</h1>
       <p style="color:var(--muted);line-height:1.6">
-        Prototype website with Admissions Enquiry + Placement Registration.
-        Forms store data locally (for demo) and placement form redirects to email compose.
+        Student Portal for Placement Registration and NCCR Enrollments.
+        Forms store data locally and the placement form redirects to the cell's email.
       </p>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button class="primary" onclick="showSection('admissions')">Apply / Enquiry</button>
-        <button onclick="showSection('placements')">Placement Registration</button>
+        <button class="primary" onclick="showSection('placements')">Placement Registration</button>
+        <button onclick="showSection('nccr')">NCCR Registration</button>
         <button onclick="showSection('submissions')">View Submissions</button>
+      </div>
+    </div>
+
+    <!-- CURRENT PLACEMENTS HIGHLIGHT -->
+    <div class="card" style="border-left: 4px solid var(--accent2);">
+      <h2 style="margin-top:0; color: var(--accent2);">Campus Placements Highlight (2025-26)</h2>
+      <p style="margin-top:0;color:var(--muted);line-height:1.6">
+        Our placement cell actively bridges the gap between academics and industry, facilitating excellent career opportunities for our graduates.
+      </p>
+      
+      <div class="grid2" style="margin-bottom: 20px;">
+        <div class="stat-box">
+          <h3 style="margin: 0; color: white; font-size: 28px;">45+</h3>
+          <p style="margin: 5px 0 0 0; color: var(--muted); font-size: 14px;">Companies Visited</p>
+        </div>
+        <div class="stat-box">
+          <h3 style="margin: 0; color: var(--accent); font-size: 28px;">150+</h3>
+          <p style="margin: 5px 0 0 0; color: var(--muted); font-size: 14px;">Offers Extended</p>
+        </div>
+      </div>
+
+      <p style="color:var(--muted); margin: 0 0 12px 0;"><strong>Top Recruiters:</strong></p>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <span class="tag">TCS</span>
+        <span class="tag">HDFC Bank</span>
+        <span class="tag">ICICI Bank</span>
+        <span class="tag">Adani Ports</span>
+        <span class="tag">Reliance Retail</span>
+        <span class="tag">Wipro</span>
+        <span class="tag">Deendayal Port Authority</span>
       </div>
     </div>
 
@@ -175,15 +234,15 @@ nav a{margin-left:10px;}
       <h2 style="margin-top:0">Quick Info</h2>
       <div class="grid2">
         <div>
-          <h3 style="margin:0 0 6px 0">Admissions</h3>
+          <h3 style="margin:0 0 6px 0">Placements</h3>
           <p style="margin:0;color:var(--muted);line-height:1.6">
-            Collect student enquiries for courses, contact details and message.
+            Collect placement-ready student data and redirect submission to the placement cell email.
           </p>
         </div>
         <div>
-          <h3 style="margin:0 0 6px 0">Placements</h3>
+          <h3 style="margin:0 0 6px 0">NCCR</h3>
           <p style="margin:0;color:var(--muted);line-height:1.6">
-            Collect placement-ready student data and redirect submission to email.
+            Register students for National Cadet Corps Registration (NCCR) activities.
           </p>
         </div>
       </div>
@@ -205,57 +264,13 @@ nav a{margin-left:10px;}
     </div>
   </div>
 
-  <!-- ADMISSIONS -->
-  <div id="admissions" class="section">
-    <div class="card">
-      <h2 style="margin-top:0">Admissions Enquiry</h2>
-
-      <form onsubmit="submitAdmissions(event)">
-        <label>Full Name *</label>
-        <input id="a_name" required>
-
-        <label>Phone (10 digits) *</label>
-        <input id="a_phone" required placeholder="9876543210">
-
-        <label>Email</label>
-        <input id="a_email" type="email" placeholder="student@email.com">
-
-        <label>Program</label>
-        <select id="a_program">
-          <option>B.Sc Computer Science</option>
-          <option>B.Sc Mathematics</option>
-          <option>B.Sc Physics</option>
-          <option>B.Sc Chemistry</option>
-          <option>B.Com</option>
-          <option>B.A English</option>
-        </select>
-
-        <label>City</label>
-        <input id="a_city" placeholder="Chennai">
-
-        <label>Message</label>
-        <textarea id="a_message" placeholder="Tell us what you need..."></textarea>
-
-        <label style="display:flex;gap:8px;align-items:center;color:var(--muted)">
-          <input type="checkbox" id="a_consent" checked style="width:auto;margin:0">
-          I agree to be contacted.
-        </label>
-
-        <br><br>
-        <button class="primary" type="submit">Submit Admissions Enquiry</button>
-      </form>
-
-      <div id="a_status" style="margin-top:12px"></div>
-    </div>
-  </div>
-
   <!-- PLACEMENTS -->
   <div id="placements" class="section">
     <div class="card">
       <h2 style="margin-top:0">Placement Registration</h2>
       <p style="margin-top:0;color:var(--muted);line-height:1.6">
-        After submit, it will open your email app and draft a message to:
-        <strong>dharam@viadecide.com</strong>
+        After submitting, this will draft an email with your details to:
+        <strong>placementtcas2026@gmail.com</strong>
       </p>
 
       <form onsubmit="submitPlacement(event)">
@@ -346,8 +361,49 @@ nav a{margin-left:10px;}
       <hr>
       <div style="color:var(--muted2);font-size:12px;line-height:1.6">
         Note: <strong>mailto redirect</strong> depends on user having an email app configured.
-        In production we’ll send directly via backend (Next.js + SMTP/SendGrid).
       </div>
+    </div>
+  </div>
+
+  <!-- NCCR -->
+  <div id="nccr" class="section">
+    <div class="card">
+      <h2 style="margin-top:0">NCCR Registration</h2>
+      <p style="margin-top:0;color:var(--muted);line-height:1.6">
+        Apply for National Cadet Corps Registration (NCCR) at Tolani College.
+      </p>
+
+      <form onsubmit="submitNCCR(event)">
+        <div class="grid2">
+          <div>
+            <label>Student Name *</label>
+            <input id="n_name" required>
+          </div>
+          <div>
+            <label>Roll No / Register No *</label>
+            <input id="n_roll" required>
+          </div>
+        </div>
+
+        <div class="grid2">
+          <div>
+            <label>Phone (10 digits) *</label>
+            <input id="n_phone" required placeholder="9876543210">
+          </div>
+          <div>
+            <label>Blood Group *</label>
+            <input id="n_blood" required placeholder="O+, B+, etc.">
+          </div>
+        </div>
+
+        <label>Why do you want to join NCCR?</label>
+        <textarea id="n_reason" placeholder="Briefly explain your interest..."></textarea>
+
+        <br><br>
+        <button class="primary" type="submit">Submit NCCR Application</button>
+      </form>
+
+      <div id="n_status" style="margin-top:12px"></div>
     </div>
   </div>
 
@@ -356,74 +412,46 @@ nav a{margin-left:10px;}
     <div class="card">
       <h2 style="margin-top:0">Submissions</h2>
       <div style="display:flex;gap:10px;flex-wrap:wrap">
-        <button onclick="clearData()">Clear All</button>
+        <button onclick="clearData()">Clear All Data</button>
         <button class="primary" onclick="exportJSON()">Export JSON</button>
       </div>
 
-      <h3 style="margin:18px 0 10px 0">Admissions</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th><th>Name</th><th>Phone</th><th>Email</th><th>Program</th><th>City</th><th>Message</th>
-          </tr>
-        </thead>
-        <tbody id="admissionsTable"></tbody>
-      </table>
-
       <h3 style="margin:18px 0 10px 0">Placements</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Date</th><th>Name</th><th>Roll</th><th>Phone</th><th>Email</th><th>Dept</th><th>Year</th><th>Skills</th><th>Role</th><th>CGPA</th><th>Link</th>
-          </tr>
-        </thead>
-        <tbody id="placementsTable"></tbody>
-      </table>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th><th>Name</th><th>Roll</th><th>Phone</th><th>Email</th><th>Dept</th><th>Year</th><th>Skills</th><th>Role</th><th>CGPA</th><th>Link</th>
+            </tr>
+          </thead>
+          <tbody id="placementsTable"></tbody>
+        </table>
+      </div>
+
+      <h3 style="margin:28px 0 10px 0">NCCR Registrations</h3>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th><th>Name</th><th>Roll</th><th>Phone</th><th>Blood Group</th><th>Reason</th>
+            </tr>
+          </thead>
+          <tbody id="nccrTable"></tbody>
+        </table>
+      </div>
     </div>
   </div>
 
 </div>
 
 <script>
-const EMAIL_TO = "dharam@viadecide.com";
+const EMAIL_TO = "placementtcas2026@gmail.com";
+const DEFAULT_STORE = '{"placements":[],"nccr":[]}';
 
 function showSection(id){
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   if(id==='submissions') loadData();
-}
-
-/* =========================
-   ADMISSIONS (Local Store)
-========================= */
-function submitAdmissions(e){
-  e.preventDefault();
-
-  const name = document.getElementById('a_name').value.trim();
-  const phone = document.getElementById('a_phone').value.trim();
-  const email = document.getElementById('a_email').value.trim();
-  const program = document.getElementById('a_program').value;
-  const city = document.getElementById('a_city').value.trim();
-  const message = document.getElementById('a_message').value.trim();
-  const consent = document.getElementById('a_consent').checked;
-
-  if(!name || !/^\d{10}$/.test(phone) || !consent){
-    document.getElementById('a_status').innerHTML =
-      '<p style="color:var(--danger)">Please enter valid name, 10-digit phone and consent.</p>';
-    return;
-  }
-
-  const store = JSON.parse(localStorage.getItem('tolaniStore') || '{"admissions":[],"placements":[]}');
-  store.admissions.unshift({
-    date:new Date().toLocaleString(),
-    name, phone, email, program, city, message
-  });
-  localStorage.setItem('tolaniStore', JSON.stringify(store));
-
-  document.getElementById('a_status').innerHTML =
-    '<p style="color:lightgreen">Admissions enquiry submitted successfully!</p>';
-
-  e.target.reset();
 }
 
 /* =========================
@@ -452,7 +480,8 @@ function submitPlacement(e){
   }
 
   // Save locally for demo
-  const store = JSON.parse(localStorage.getItem('tolaniStore') || '{"admissions":[],"placements":[]}');
+  const store = JSON.parse(localStorage.getItem('tolaniStore') || DEFAULT_STORE);
+  if(!store.placements) store.placements = [];
   store.placements.unshift({
     date:new Date().toLocaleString(),
     name, roll, phone, email, dept, year, skills, role, cgpa, link, bio
@@ -493,7 +522,7 @@ Tolani College Website (Prototype)`;
   document.getElementById('p_status').innerHTML =
     '<p style="color:lightgreen">Saved! Opening your email app to send the details…</p>';
 
-  // Small delay so user sees message
+  // Small delay so user sees message before redirecting
   setTimeout(()=>{
     window.location.href = mailto;
   }, 350);
@@ -502,42 +531,53 @@ Tolani College Website (Prototype)`;
 }
 
 /* =========================
+   NCCR (Local Store)
+========================= */
+function submitNCCR(e){
+  e.preventDefault();
+
+  const name = document.getElementById('n_name').value.trim();
+  const roll = document.getElementById('n_roll').value.trim();
+  const phone = document.getElementById('n_phone').value.trim();
+  const blood = document.getElementById('n_blood').value.trim();
+  const reason = document.getElementById('n_reason').value.trim();
+
+  if(!name || !roll || !/^\d{10}$/.test(phone) || !blood){
+    document.getElementById('n_status').innerHTML =
+      '<p style="color:var(--danger)">Please fill all required fields properly.</p>';
+    return;
+  }
+
+  const store = JSON.parse(localStorage.getItem('tolaniStore') || DEFAULT_STORE);
+  if(!store.nccr) store.nccr = [];
+  store.nccr.unshift({
+    date:new Date().toLocaleString(),
+    name, roll, phone, blood, reason
+  });
+  localStorage.setItem('tolaniStore', JSON.stringify(store));
+
+  document.getElementById('n_status').innerHTML =
+    '<p style="color:lightgreen">NCCR registration submitted successfully!</p>';
+
+  e.target.reset();
+}
+
+/* =========================
    LOAD + SHOW SUBMISSIONS
 ========================= */
 function loadData(){
-  const store = JSON.parse(localStorage.getItem('tolaniStore') || '{"admissions":[],"placements":[]}');
-
-  // Admissions table
-  const aBody = document.getElementById('admissionsTable');
-  aBody.innerHTML = '';
-  if(store.admissions.length === 0){
-    aBody.innerHTML = '<tr><td colspan="7">No admissions submissions yet.</td></tr>';
-  } else {
-    store.admissions.forEach(d=>{
-      aBody.innerHTML += `
-        <tr>
-          <td>${d.date}</td>
-          <td>${escapeHtml(d.name)}</td>
-          <td>${escapeHtml(d.phone)}</td>
-          <td>${escapeHtml(d.email || '-')}</td>
-          <td>${escapeHtml(d.program)}</td>
-          <td>${escapeHtml(d.city || '-')}</td>
-          <td>${escapeHtml(d.message || '-')}</td>
-        </tr>
-      `;
-    });
-  }
+  const store = JSON.parse(localStorage.getItem('tolaniStore') || DEFAULT_STORE);
 
   // Placements table
   const pBody = document.getElementById('placementsTable');
   pBody.innerHTML = '';
-  if(store.placements.length === 0){
-    pBody.innerHTML = '<tr><td colspan="11">No placement submissions yet.</td></tr>';
+  if(!store.placements || store.placements.length === 0){
+    pBody.innerHTML = '<tr><td colspan="11" style="text-align:center;">No placement submissions yet.</td></tr>';
   } else {
     store.placements.forEach(d=>{
       pBody.innerHTML += `
         <tr>
-          <td>${d.date}</td>
+          <td style="white-space:nowrap;">${d.date}</td>
           <td>${escapeHtml(d.name)}</td>
           <td>${escapeHtml(d.roll)}</td>
           <td>${escapeHtml(d.phone)}</td>
@@ -552,18 +592,40 @@ function loadData(){
       `;
     });
   }
+
+  // NCCR table
+  const nBody = document.getElementById('nccrTable');
+  nBody.innerHTML = '';
+  if(!store.nccr || store.nccr.length === 0){
+    nBody.innerHTML = '<tr><td colspan="6" style="text-align:center;">No NCCR submissions yet.</td></tr>';
+  } else {
+    store.nccr.forEach(d=>{
+      nBody.innerHTML += `
+        <tr>
+          <td style="white-space:nowrap;">${d.date}</td>
+          <td>${escapeHtml(d.name)}</td>
+          <td>${escapeHtml(d.roll)}</td>
+          <td>${escapeHtml(d.phone)}</td>
+          <td>${escapeHtml(d.blood)}</td>
+          <td>${escapeHtml(d.reason || '-')}</td>
+        </tr>
+      `;
+    });
+  }
 }
 
 /* =========================
    UTILITIES
 ========================= */
 function clearData(){
-  localStorage.removeItem('tolaniStore');
-  loadData();
+  if(confirm("Are you sure you want to clear all submissions?")){
+    localStorage.removeItem('tolaniStore');
+    loadData();
+  }
 }
 
 function exportJSON(){
-  const store = JSON.parse(localStorage.getItem('tolaniStore') || '{"admissions":[],"placements":[]}');
+  const store = JSON.parse(localStorage.getItem('tolaniStore') || DEFAULT_STORE);
   const blob = new Blob([JSON.stringify(store,null,2)], {type:"application/json"});
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
@@ -581,7 +643,19 @@ function escapeHtml(str){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
+
+// Fix legacy localstorage issues if moving from 'ncc' to 'nccr'
+(function migrateOldData(){
+  let store = JSON.parse(localStorage.getItem('tolaniStore'));
+  if(store && store.ncc && !store.nccr) {
+    store.nccr = store.ncc;
+    delete store.ncc;
+    localStorage.setItem('tolaniStore', JSON.stringify(store));
+  }
+})();
 </script>
 
 </body>
 </html>
+
+
